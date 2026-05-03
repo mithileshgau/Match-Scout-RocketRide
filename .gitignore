@@ -1,0 +1,16 @@
+.rocketride/
+.env
+
+./data/output
+
+/data/output
+
+venv/
+
+__pycache__/
+
+.venv
+
+.vscode
+
+.claude

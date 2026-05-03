@@ -1,0 +1,218 @@
+{
+  "components": [
+    {
+      "id": "prompt_1",
+      "provider": "prompt",
+      "config": {
+        "instructions": [
+          "search {{text}}"
+        ],
+        "parameters": {
+          "google": {}
+        }
+      },
+      "ui": {
+        "position": {
+          "x": 335.546875,
+          "y": 284.82666015625
+        },
+        "measured": {
+          "width": 150,
+          "height": 119
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      },
+      "input": [
+        {
+          "lane": "questions",
+          "from": "chat_1"
+        }
+      ]
+    },
+    {
+      "id": "analyst_1",
+      "provider": "agent_langchain",
+      "config": {
+        "agent_description": "Tactical Scout Agent",
+        "instructions": [
+          "Using the Python tool, please perform the following steps:Initialize the FirecrawlApp from the firecrawl library using the API key '${ROCKETRIDE_FIRECRAWL_API_KEY}'.Call the search method with the query 'Arsenal vs Fulham espn.com' and set the limit to 3.Extract and print the url of the results so I can use it for scraping."
+        ],
+        "parameters": {
+          "google": {}
+        }
+      },
+      "ui": {
+        "position": {
+          "x": 600,
+          "y": 300
+        },
+        "measured": {
+          "width": 150,
+          "height": 86
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      },
+      "control": [
+        {
+          "classType": "llm",
+          "from": "llm_gemini_analyst"
+        }
+      ],
+      "input": [
+        {
+          "lane": "questions",
+          "from": "prompt_1"
+        }
+      ]
+    },
+    {
+      "id": "llm_gemini_analyst",
+      "provider": "llm_gemini",
+      "config": {
+        "profile": "custom",
+        "custom": {
+          "model": "gemini-3.1-flash-lite-preview",
+          "modelTotalTokens": 1000000,
+          "outputTokens": 4096,
+          "apikey": "${ROCKETRIDE_GEMINI_API_KEY}"
+        }
+      },
+      "ui": {
+        "position": {
+          "x": 318.12262344360346,
+          "y": 438.81415748596186
+        },
+        "measured": {
+          "width": 150,
+          "height": 66
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      },
+      "control": [
+        {
+          "classType": "llm",
+          "from": "analyst_1"
+        }
+      ]
+    },
+    {
+      "id": "response_report_1",
+      "provider": "response_answers",
+      "config": {
+        "laneName": "text_report"
+      },
+      "ui": {
+        "position": {
+          "x": 850,
+          "y": 300
+        },
+        "measured": {
+          "width": 150,
+          "height": 66
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      },
+      "input": [
+        {
+          "lane": "answers",
+          "from": "analyst_1"
+        }
+      ]
+    },
+    {
+      "id": "chat_1",
+      "provider": "chat",
+      "config": {
+        "hideForm": true,
+        "mode": "Source",
+        "parameters": {},
+        "type": "chat"
+      },
+      "ui": {
+        "position": {
+          "x": 92.16796874999997,
+          "y": 353.359375
+        },
+        "measured": {
+          "width": 150,
+          "height": 66
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      }
+    },
+    {
+      "id": "tool_firecrawl_1",
+      "provider": "tool_firecrawl",
+      "config": {
+        "apikey": "${ROCKETRIDE_FIRECRAWL_API_KEY}",
+        "type": "tool_firecrawl"
+      },
+      "ui": {
+        "position": {
+          "x": 695.87890625,
+          "y": 472.59765625
+        },
+        "measured": {
+          "width": 150,
+          "height": 40
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      },
+      "control": [
+        {
+          "classType": "tool",
+          "from": "analyst_1"
+        }
+      ]
+    },
+    {
+      "id": "tool_python_1",
+      "provider": "tool_python",
+      "config": {
+        "allowedModules": [
+          {
+            "moduleName": "firecrawl "
+          }
+        ],
+        "timeout": 20,
+        "type": "tool_python",
+        "parameters": {
+          "google": {}
+        }
+      },
+      "ui": {
+        "position": {
+          "x": 528.297477722168,
+          "y": 464.48782157897955
+        },
+        "measured": {
+          "width": 150,
+          "height": 40
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      },
+      "control": [
+        {
+          "classType": "tool",
+          "from": "analyst_1"
+        }
+      ]
+    }
+  ],
+  "project_id": "4d7c801c-d985-8401-9a6b-692b1fde9055",
+  "version": 1,
+  "source": "chat_1",
+  "viewport": {
+    "x": -43.46866265981595,
+    "y": -155.51796335159423,
+    "zoom": 0.9292868444779977
+  },
+  "docRevision": 35
+}

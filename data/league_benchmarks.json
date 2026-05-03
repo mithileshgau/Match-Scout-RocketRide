@@ -1,0 +1,10 @@
+{
+  "league": "Premier League",
+  "season": "2025/26",
+  "benchmarks": {
+    "avg_possession": 50.0,
+    "avg_xg": 1.35,
+    "avg_pass_accuracy": 78.5,
+    "avg_shots_on_target": 4.2
+  }
+}

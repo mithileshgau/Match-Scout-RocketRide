@@ -1,0 +1,346 @@
+{
+  "components": [
+    {
+      "id": "chat_1",
+      "provider": "chat",
+      "config": {
+        "hideForm": true,
+        "mode": "Source",
+        "parameters": {},
+        "type": "chat"
+      },
+      "ui": {
+        "position": {
+          "x": -27.051730016293703,
+          "y": 379.4644569228628
+        },
+        "measured": {
+          "width": 150,
+          "height": 126
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      }
+    },
+    {
+      "id": "prompt_1",
+      "provider": "prompt",
+      "config": {
+        "instructions": [
+          "Generate a hierarchical tactical report for: {{text}}"
+        ]
+      },
+      "ui": {
+        "position": {
+          "x": 200,
+          "y": 247.58727309343095
+        },
+        "measured": {
+          "width": 150,
+          "height": 140
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      },
+      "input": [
+        {
+          "lane": "questions",
+          "from": "chat_1"
+        }
+      ]
+    },
+    {
+      "id": "master_scout",
+      "provider": "agent_langchain",
+      "config": {
+        "agent_description": "Master Scout - Orchestrator",
+        "instructions": [
+          "You are the Master Scout. To analyze a match, follow this workflow:\n1. Use the **search_specialist** tool to find the correct ESPN match report URL for the given match.\n2. Once you have the URL, provide it to the **scrape_specialist** tool to extract the tactical data.\n3. Combine the findings into a final technical report for the user."
+        ]
+      },
+      "ui": {
+        "position": {
+          "x": 561.5883863172114,
+          "y": 163.05061679251313
+        },
+        "measured": {
+          "width": 150,
+          "height": 108
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      },
+      "input": [
+        {
+          "lane": "questions",
+          "from": "prompt_1"
+        }
+      ]
+    },
+    {
+      "id": "llm_master",
+      "provider": "llm_gemini",
+      "config": {
+        "profile": "custom",
+        "custom": {
+          "model": "gemini-3.1-flash-lite-preview",
+          "modelTotalTokens": 1000000,
+          "outputTokens": 4096,
+          "apikey": "${ROCKETRIDE_GEMINI_API_KEY}"
+        }
+      },
+      "ui": {
+        "position": {
+          "x": 187.93636546715481,
+          "y": 460.14439875611015
+        },
+        "measured": {
+          "width": 150,
+          "height": 88
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      },
+      "control": [
+        {
+          "classType": "llm",
+          "from": "master_scout"
+        }
+      ]
+    },
+    {
+      "id": "search_specialist",
+      "provider": "agent_langchain",
+      "config": {
+        "agent_description": "Search Specialist - Finds match URLs",
+        "instructions": [
+          "Use the Python tool (with Firecrawl SDK) to search for the requested match report on ESPN. Return ONLY the URL. API Key: '${ROCKETRIDE_FIRECRAWL_API_KEY}'."
+        ]
+      },
+      "ui": {
+        "position": {
+          "x": 703.3814662520367,
+          "y": 425.5894995409921
+        },
+        "measured": {
+          "width": 150,
+          "height": 108
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      },
+      "control": [
+        {
+          "classType": "tool",
+          "from": "master_scout"
+        }
+      ]
+    },
+    {
+      "id": "llm_search",
+      "provider": "llm_gemini",
+      "config": {
+        "profile": "custom",
+        "custom": {
+          "model": "gemini-3.1-flash-lite-preview",
+          "modelTotalTokens": 1000000,
+          "outputTokens": 1024,
+          "apikey": "${ROCKETRIDE_GEMINI_API_KEY}"
+        }
+      },
+      "ui": {
+        "position": {
+          "x": 581.6486811787152,
+          "y": 602.6583905672502
+        },
+        "measured": {
+          "width": 150,
+          "height": 88
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      },
+      "control": [
+        {
+          "classType": "llm",
+          "from": "search_specialist"
+        }
+      ]
+    },
+    {
+      "id": "tool_python_search",
+      "provider": "tool_python",
+      "config": {
+        "allowedModules": [
+          {
+            "moduleName": "firecrawl"
+          }
+        ],
+        "timeout": 30,
+        "type": "tool_python"
+      },
+      "ui": {
+        "position": {
+          "x": 790.5355430771374,
+          "y": 603.1164777729194
+        },
+        "measured": {
+          "width": 150,
+          "height": 62
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      },
+      "control": [
+        {
+          "classType": "tool",
+          "from": "search_specialist"
+        }
+      ]
+    },
+    {
+      "id": "scrape_specialist",
+      "provider": "agent_langchain",
+      "config": {
+        "agent_description": "Scrape Specialist - Extracts tactical data from URLs",
+        "instructions": [
+          "Use the Firecrawl tool to scrape the provided URL and provide a detailed summary of the tactical analysis found on the page."
+        ]
+      },
+      "ui": {
+        "position": {
+          "x": 448.08076422326496,
+          "y": 434.7834018658348
+        },
+        "measured": {
+          "width": 150,
+          "height": 108
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      },
+      "control": [
+        {
+          "classType": "tool",
+          "from": "master_scout"
+        }
+      ]
+    },
+    {
+      "id": "llm_scrape",
+      "provider": "llm_gemini",
+      "config": {
+        "profile": "custom",
+        "custom": {
+          "model": "gemini-3.1-flash-lite-preview",
+          "modelTotalTokens": 1000000,
+          "outputTokens": 2048,
+          "apikey": "${ROCKETRIDE_GEMINI_API_KEY}"
+        }
+      },
+      "ui": {
+        "position": {
+          "x": 153.89320029607097,
+          "y": 618.2281778987978
+        },
+        "measured": {
+          "width": 150,
+          "height": 88
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      },
+      "control": [
+        {
+          "classType": "llm",
+          "from": "scrape_specialist"
+        }
+      ]
+    },
+    {
+      "id": "tool_firecrawl_scrape",
+      "provider": "tool_firecrawl",
+      "config": {
+        "apikey": "${ROCKETRIDE_FIRECRAWL_API_KEY}",
+        "type": "tool_firecrawl"
+      },
+      "ui": {
+        "position": {
+          "x": 384.75959283273187,
+          "y": 616.3681937771406
+        },
+        "measured": {
+          "width": 150,
+          "height": 62
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      },
+      "control": [
+        {
+          "classType": "tool",
+          "from": "scrape_specialist"
+        }
+      ]
+    },
+    {
+      "id": "response_report",
+      "provider": "response_answers",
+      "config": {
+        "laneName": "text_report"
+      },
+      "ui": {
+        "position": {
+          "x": 1050,
+          "y": 300
+        },
+        "measured": {
+          "width": 150,
+          "height": 66
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      },
+      "input": [
+        {
+          "lane": "answers",
+          "from": "master_scout"
+        }
+      ]
+    },
+    {
+      "id": "response_answers_1",
+      "provider": "response_answers",
+      "config": {
+        "laneName": "answers"
+      },
+      "ui": {
+        "position": {
+          "x": 1021.6423427810662,
+          "y": 426.329736235743
+        },
+        "measured": {
+          "width": 150,
+          "height": 66
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      },
+      "input": [
+        {
+          "lane": "answers",
+          "from": "search_specialist"
+        }
+      ]
+    }
+  ],
+  "project_id": "scout-hierarchical-001",
+  "version": 1,
+  "source": "chat_1",
+  "viewport": {
+    "x": 182.7564077880994,
+    "y": -44.50461662655252,
+    "zoom": 0.5914593998373834
+  },
+  "docRevision": 25
+}

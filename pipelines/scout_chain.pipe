@@ -1,0 +1,180 @@
+{
+  "components": [
+    {
+      "id": "chat_1",
+      "provider": "chat",
+      "config": {
+        "hideForm": true,
+        "mode": "Source",
+        "parameters": {},
+        "type": "chat"
+      },
+      "ui": {
+        "position": {
+          "x": 50,
+          "y": 300
+        },
+        "measured": {
+          "width": 150,
+          "height": 66
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      }
+    },
+    {
+      "id": "prompt_1",
+      "provider": "prompt",
+      "config": {
+        "instructions": [
+          "Perform a tactical analysis for: {{text}}"
+        ]
+      },
+      "ui": {
+        "position": {
+          "x": 250,
+          "y": 300
+        },
+        "measured": {
+          "width": 150,
+          "height": 119
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      },
+      "input": [
+        {
+          "lane": "questions",
+          "from": "chat_1"
+        }
+      ]
+    },
+    {
+      "id": "analyst_1",
+      "provider": "agent_langchain",
+      "config": {
+        "agent_description": "Unified Tactical Scout",
+        "instructions": [
+          "Follow these steps sequentially using the **Python tool**:\n1. **Search Phase**: Search for 'Arsenal vs Fulham espn.com' using the Firecrawl library (API Key: '${ROCKETRIDE_FIRECRAWL_API_KEY}'). Identify the best match report URL.\n"
+        ],
+        "parameters": {
+          "google": {}
+        }
+      },
+      "ui": {
+        "position": {
+          "x": 500,
+          "y": 300
+        },
+        "measured": {
+          "width": 150,
+          "height": 86
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      },
+      "input": [
+        {
+          "lane": "questions",
+          "from": "prompt_1"
+        }
+      ]
+    },
+    {
+      "id": "llm_gemini_analyst",
+      "provider": "llm_gemini",
+      "config": {
+        "profile": "custom",
+        "custom": {
+          "model": "gemini-3.1-flash-lite-preview",
+          "modelTotalTokens": 1000000,
+          "outputTokens": 4096,
+          "apikey": "${ROCKETRIDE_GEMINI_API_KEY}"
+        }
+      },
+      "ui": {
+        "position": {
+          "x": 350,
+          "y": 450
+        },
+        "measured": {
+          "width": 150,
+          "height": 66
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      },
+      "control": [
+        {
+          "classType": "llm",
+          "from": "analyst_1"
+        }
+      ]
+    },
+    {
+      "id": "tool_python_1",
+      "provider": "tool_python",
+      "config": {
+        "allowedModules": [
+          {
+            "moduleName": "firecrawl"
+          }
+        ],
+        "timeout": 30,
+        "type": "tool_python"
+      },
+      "ui": {
+        "position": {
+          "x": 520,
+          "y": 450
+        },
+        "measured": {
+          "width": 150,
+          "height": 40
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      },
+      "control": [
+        {
+          "classType": "tool",
+          "from": "analyst_1"
+        }
+      ]
+    },
+    {
+      "id": "response_report",
+      "provider": "response_answers",
+      "config": {
+        "laneName": "text_report"
+      },
+      "ui": {
+        "position": {
+          "x": 800,
+          "y": 300
+        },
+        "measured": {
+          "width": 150,
+          "height": 66
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      },
+      "input": [
+        {
+          "lane": "answers",
+          "from": "analyst_1"
+        }
+      ]
+    }
+  ],
+  "project_id": "scout-chain-002",
+  "version": 1,
+  "source": "chat_1",
+  "viewport": {
+    "x": -5.171717171717091,
+    "y": -203.01212121212114,
+    "zoom": 1.0343434343434341
+  },
+  "docRevision": 1
+}

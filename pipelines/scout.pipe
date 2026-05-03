@@ -1,0 +1,177 @@
+{
+  "components": [
+    {
+      "id": "webhook_1",
+      "provider": "webhook",
+      "config": {
+        "hideForm": true,
+        "mode": "Source",
+        "parameters": {},
+        "type": "webhook"
+      },
+      "ui": {
+        "position": {
+          "x": 0,
+          "y": 300
+        },
+        "measured": {
+          "width": 150,
+          "height": 160
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      }
+    },
+    {
+      "id": "prompt_1",
+      "provider": "prompt",
+      "config": {
+        "instructions": [
+          "Generate a detailed tactical scout request for the following soccer match: {{text}}",
+          "The request should ask for: key stats (possession, xG), tactical style analysis, and a summary of performance."
+        ]
+      },
+      "ui": {
+        "position": {
+          "x": 200,
+          "y": 300
+        },
+        "measured": {
+          "width": 150,
+          "height": 119
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      },
+      "input": [
+        {
+          "lane": "text",
+          "from": "webhook_1"
+        }
+      ]
+    },
+    {
+      "id": "analyst_1",
+      "provider": "agent_langchain",
+      "config": {
+        "agent_description": "Tactical Scout Agent",
+        "instructions": [
+          "1. Receive the tactical scout request.",
+          "2. Analyze the match based on available data or simulate analysis using internal knowledge.",
+          "3. Provide a structured, professional tactical report.",
+          "4. Return the report as the final answer."
+        ]
+      },
+      "ui": {
+        "position": {
+          "x": 450,
+          "y": 300
+        },
+        "measured": {
+          "width": 150,
+          "height": 86
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      },
+      "control": [],
+      "input": [
+        {
+          "lane": "questions",
+          "from": "prompt_1"
+        }
+      ]
+    },
+    {
+      "id": "llm_gemini_analyst",
+      "provider": "llm_gemini",
+      "config": {
+        "profile": "custom",
+        "custom": {
+          "model": "gemini-3.1-flash-lite-preview",
+          "modelTotalTokens": 1000000,
+          "outputTokens": 4096,
+          "apikey": "${ROCKETRIDE_GEMINI_API_KEY}"
+        },
+        "parameters": {
+          "google": {}
+        }
+      },
+      "ui": {
+        "position": {
+          "x": 380.2544295079344,
+          "y": 483.2549635904491
+        },
+        "measured": {
+          "width": 150,
+          "height": 66
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      },
+      "control": [
+        {
+          "classType": "llm",
+          "from": "analyst_1"
+        }
+      ]
+    },
+    {
+      "id": "tool_python_1",
+      "provider": "tool_python",
+      "config": {},
+      "ui": {
+        "position": {
+          "x": 737.1913704139673,
+          "y": 478.9053428236723
+        },
+        "measured": {
+          "width": 150,
+          "height": 40
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      },
+      "control": [
+        {
+          "classType": "tool",
+          "from": "analyst_1"
+        }
+      ]
+    },
+    {
+      "id": "response_report_1",
+      "provider": "response_answers",
+      "config": {
+        "laneName": "text_report"
+      },
+      "ui": {
+        "position": {
+          "x": 700,
+          "y": 300
+        },
+        "measured": {
+          "width": 150,
+          "height": 66
+        },
+        "nodeType": "default",
+        "formDataValid": true
+      },
+      "input": [
+        {
+          "lane": "answers",
+          "from": "analyst_1"
+        }
+      ]
+    }
+  ],
+  "project_id": "1c1d43f0-76a0-4cc5-aaca-b15155f52cae",
+  "version": 1,
+  "source": "webhook_1",
+  "viewport": {
+    "x": 190.6112698138623,
+    "y": -21.60737742641865,
+    "zoom": 0.5575214476116349
+  },
+  "docRevision": 6
+}
