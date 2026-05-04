@@ -2,7 +2,7 @@
 
 
 ## Overview
-**Gemini-Scout** is a state-of-the-art tactical scouting platform powered by RocketRide and Google Gemini. It automates the process of identifying match reports, extracting deep tactical data, and generating professional scouting briefings with dynamic visualizations.
+**Match-Scout** is a state-of-the-art tactical scouting platform powered by RocketRide and Google Gemini. It automates the process of identifying match reports, extracting deep tactical data, and generating professional scouting briefings with dynamic visualizations.
 
 The platform is designed for soccer analysts and coaches who need on-demand, data-driven insights into English soccer matches.
 
