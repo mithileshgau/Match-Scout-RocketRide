@@ -1,4 +1,4 @@
-# Gemini-Scout: Tactical Match Analysis
+# Agentic Match-Scout: Tactical Match Analysis (RocketRide)
 
 
 ## Overview
